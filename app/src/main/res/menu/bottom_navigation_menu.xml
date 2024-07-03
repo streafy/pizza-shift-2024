@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pizza_menu_item"
+        android:enabled="true"
+        android:icon="@drawable/ic_pizza"
+        android:title="@string/pizza_menu_item"/>
+    <item
+        android:id="@+id/orders_menu_item"
+        android:enabled="true"
+        android:icon="@drawable/ic_orders"
+        android:title="@string/orders_menu_item"/>
+    <item
+        android:id="@+id/cart_menu_item"
+        android:enabled="true"
+        android:icon="@drawable/ic_cart"
+        android:title="@string/cart_menu_item"/>
+    <item
+        android:id="@+id/profile_menu_item"
+        android:enabled="true"
+        android:icon="@drawable/ic_user"
+        android:title="@string/profile_menu_item"/>
+</menu>
