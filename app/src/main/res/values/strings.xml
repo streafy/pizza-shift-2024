@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">pizza-shift-2024</string>
+    <string name="pizza_title">Пицца</string>
+
+    <string name="pizza_menu_item">Пицца</string>
+    <string name="orders_menu_item">Заказы</string>
+    <string name="cart_menu_item">Корзина</string>
+    <string name="profile_menu_item">Профиль</string>
+    <string name="price">от %1$d ₽</string>
+
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="retry">Повторить попытку</string>
 </resources>
