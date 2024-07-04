@@ -2,14 +2,19 @@ package com.streafy.pizzashift2024.pizzalist.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.streafy.pizzashift2024.pizzalist.domain.GetPizzaListUseCase
 import com.streafy.pizzashift2024.pizzalist.domain.Pizza
-import com.streafy.pizzashift2024.pizzalist.domain.createMockData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PizzaListViewModel : ViewModel() {
+@HiltViewModel
+class PizzaListViewModel @Inject constructor(
+    private val getPizzaListUseCase: GetPizzaListUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow<PizzaListUiState>(PizzaListUiState.Initial)
     val state: StateFlow<PizzaListUiState> get() = _state
@@ -19,7 +24,7 @@ class PizzaListViewModel : ViewModel() {
             _state.value = PizzaListUiState.Loading
 
             try {
-                val pizzas = createMockData()
+                val pizzas = getPizzaListUseCase()
                 _state.value = PizzaListUiState.Content(pizzas)
             } catch (ce: CancellationException) {
                 throw ce
