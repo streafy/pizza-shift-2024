@@ -15,6 +15,7 @@ constraintlayout = "2.1.4"
 fragmentKtx = "1.8.1"
 ksp = "2.0.0-1.0.21"
 hilt = "2.51.1"
+cicerone = "7.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 retrofit-converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+cicerone = { module = "com.github.terrakok:cicerone", version.ref = "cicerone" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
