@@ -11,9 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import com.streafy.pizzashift2024.R
 import com.streafy.pizzashift2024.databinding.FragmentPizzaListBinding
 import com.streafy.pizzashift2024.pizzalist.domain.Pizza
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class PizzaListFragment : Fragment() {
 
     companion object {
