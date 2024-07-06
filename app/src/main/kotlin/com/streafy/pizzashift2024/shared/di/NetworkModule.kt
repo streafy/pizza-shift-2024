@@ -1,5 +1,6 @@
 package com.streafy.pizzashift2024.shared.di
 
+import com.streafy.pizzashift2024.shared.AuthTokenInterceptor
 import com.streafy.pizzashift2024.shared.NetworkUrlConfig.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -34,7 +35,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient()
+    fun provideOkHttpClient(authTokenInterceptor: AuthTokenInterceptor): OkHttpClient =
+        OkHttpClient.Builder()
+            .addInterceptor(authTokenInterceptor)
+            .build()
 
     @Provides
     @Singleton
