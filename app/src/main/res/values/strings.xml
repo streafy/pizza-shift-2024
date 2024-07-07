@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">pizza-shift-2024</string>
     <string name="pizza_title">Пицца</string>
+    <string name="auth_title">Авторизация</string>
 
     <string name="pizza_menu_item">Пицца</string>
     <string name="orders_menu_item">Заказы</string>
@@ -10,4 +11,12 @@
 
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="retry">Повторить попытку</string>
+
+    <string name="auth_hint">Введите номер телефона для входа в личный кабинет</string>
+    <string name="code_hint">Запросить код повторно можно через %1$d секунд</string>
+    <string name="phone_hint">Телефон</string>
+    <string name="code">Проверочный код</string>
+    <string name="continue_text">Продолжить</string>
+    <string name="login">Войти</string>
+    <string name="request_code_again">Запросить код ещё раз</string>
 </resources>
