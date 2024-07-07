@@ -2,7 +2,7 @@ package com.streafy.pizzashift2024.pizzalist.data
 
 import com.streafy.pizzashift2024.pizzalist.data.model.PizzaModel
 import com.streafy.pizzashift2024.pizzalist.domain.Pizza
-import com.streafy.pizzashift2024.shared.NetworkUrlConfig
+import com.streafy.pizzashift2024.shared.network.NetworkUrlConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -1,4 +1,4 @@
-package com.streafy.pizzashift2024.shared
+package com.streafy.pizzashift2024.shared.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
