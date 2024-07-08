@@ -67,7 +67,7 @@ class PizzaListFragment : Fragment() {
 
     private fun handleState(state: PizzaListUiState) {
         when (state) {
-            PizzaListUiState.Initial -> Unit
+            PizzaListUiState.Initial -> showLoading()
             PizzaListUiState.Loading -> showLoading()
             is PizzaListUiState.Content -> showContent(state.pizzas)
             is PizzaListUiState.Error -> showError(state.message)
