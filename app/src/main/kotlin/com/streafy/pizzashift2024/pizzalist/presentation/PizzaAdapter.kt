@@ -15,21 +15,26 @@ class PizzaAdapter(
     private val onClick: (Pizza) -> Unit
 ) : ListAdapter<Pizza, PizzaAdapter.PizzaViewHolder>(PizzaDiffCallback) {
 
-    class PizzaViewHolder(binding: ItemPizzaBinding) : RecyclerView.ViewHolder(binding.root) {
+    class PizzaViewHolder(
+        private val binding: ItemPizzaBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val image = binding.ivImage
-        private val name = binding.tvName
-        private val description = binding.tvDescription
-        private val price = binding.tvPrice
-
-        fun bind(pizza: Pizza) {
-            image.load(pizza.imageUri) {
-                placeholder(R.drawable.placeholder_pizza)
-                crossfade(true)
+        fun bind(
+            pizza: Pizza,
+            onClick: (Pizza) -> Unit
+        ) {
+            with(binding) {
+                ivImage.load(pizza.imageUri) {
+                    placeholder(R.drawable.placeholder_pizza)
+                    crossfade(true)
+                }
+                tvName.text = pizza.name
+                tvDescription.text = pizza.description
+                tvPrice.text = context.getString(R.string.price, pizza.price)
             }
-            name.text = pizza.name
-            description.text = pizza.description
-            price.text = context.getString(R.string.price, pizza.price)
+            itemView.setOnClickListener {
+                onClick(pizza)
+            }
         }
     }
 
@@ -41,10 +46,10 @@ class PizzaAdapter(
     }
 
     override fun onBindViewHolder(holder: PizzaViewHolder, position: Int) {
-        holder.bind(getItem(position))
-        holder.itemView.setOnClickListener {
-            onClick(getItem(position))
-        }
+        holder.bind(
+            pizza = getItem(position),
+            onClick = onClick
+        )
     }
 }
 
