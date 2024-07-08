@@ -11,7 +11,7 @@ class PizzaModelConverter @Inject constructor() {
 
     fun convert(model: PizzaModel): Pizza =
         Pizza(
-            id = model.id.toInt(),
+            id = model.id,
             name = model.name,
             description = model.description,
             price = model.sizes.first().price,

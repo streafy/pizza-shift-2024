@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Ingredient(
+data class ToppingModel(
     val cost: Int,
     @SerialName("img") val imageUri: String,
     val name: String
