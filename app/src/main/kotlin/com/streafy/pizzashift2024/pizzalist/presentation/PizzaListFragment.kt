@@ -51,7 +51,7 @@ class PizzaListFragment : Fragment() {
         }
 
         val recycler = binding.rvPizzaList
-        adapter = PizzaAdapter(onClick = { })
+        adapter = PizzaAdapter(onClick = { viewModel.openPizzaCard(it) })
         recycler.adapter = adapter
 
         binding.btnRetry.setOnClickListener {
