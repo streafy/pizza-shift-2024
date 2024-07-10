@@ -5,12 +5,15 @@
     <dimen name="text_size_large">24sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_code_hint">14sp</dimen>
+    <dimen name="text_size_hint">14sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
 
     <dimen name="spacing_1x">4dp</dimen>
     <dimen name="spacing_2x">8dp</dimen>
     <dimen name="spacing_3x">12dp</dimen>
+    <dimen name="spacing_3_5x">14dp</dimen>
     <dimen name="spacing_4x">16dp</dimen>
     <dimen name="spacing_5x">20dp</dimen>
     <dimen name="spacing_6x">24dp</dimen>
+    <dimen name="spacing_8x">32dp</dimen>
 </resources>

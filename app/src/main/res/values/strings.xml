@@ -20,4 +20,7 @@
     <string name="continue_text">Продолжить</string>
     <string name="login">Войти</string>
     <string name="request_code_again">Запросить код ещё раз</string>
+    <string name="add_to_cart">Добавить в корзину</string>
+    <string name="add_topping">Добавить по вкусу</string>
+    <string name="size_and_dough">%1$s, традиционное тесто</string>
 </resources>
