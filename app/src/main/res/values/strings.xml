@@ -7,7 +7,8 @@
     <string name="orders_menu_item">Заказы</string>
     <string name="cart_menu_item">Корзина</string>
     <string name="profile_menu_item">Профиль</string>
-    <string name="price">от %1$d ₽</string>
+    <string name="price">%1$d ₽</string>
+    <string name="price_from">от %1$d ₽</string>
 
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="retry">Повторить попытку</string>
