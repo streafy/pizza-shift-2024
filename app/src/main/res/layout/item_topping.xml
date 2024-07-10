@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_topping"
+    style="?attr/materialCardViewElevatedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_1x"
+    android:layout_marginBottom="@dimen/spacing_2x"
+    android:checkable="true">
+
+    <LinearLayout
+        android:id="@+id/ll_topping_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/spacing_2x"
+        android:orientation="vertical"
+        app:rippleColor="@null">
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_3x"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_small"
+            tools:text="@tools:sample/lorem" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_1x"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_hint"
+            android:textStyle="bold"
+            tools:text="@tools:sample/lorem" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
