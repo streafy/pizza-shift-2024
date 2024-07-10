@@ -3,7 +3,7 @@ package com.streafy.pizzashift2024.pizzalist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.streafy.pizzashift2024.pizzalist.domain.GetPizzaListUseCase
-import com.streafy.pizzashift2024.pizzalist.domain.Pizza
+import com.streafy.pizzashift2024.shared.pizza.domain.Pizza
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
