@@ -3,6 +3,7 @@ package com.streafy.pizzashift2024.pizzalist.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.streafy.pizzashift2024.pizzalist.domain.GetPizzaListUseCase
+import com.streafy.pizzashift2024.pizzalist.navigation.PizzaListRouter
 import com.streafy.pizzashift2024.shared.pizza.domain.Pizza
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PizzaListViewModel @Inject constructor(
-    private val getPizzaListUseCase: GetPizzaListUseCase
+    private val getPizzaListUseCase: GetPizzaListUseCase,
+    private val router: PizzaListRouter
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<PizzaListUiState>(PizzaListUiState.Initial)
@@ -32,6 +34,10 @@ class PizzaListViewModel @Inject constructor(
                 _state.value = PizzaListUiState.Error(e.message)
             }
         }
+    }
+
+    fun openPizzaCard(pizza: Pizza) {
+        router.openPizzaCard(pizza)
     }
 }
 

@@ -7,7 +7,9 @@ import com.streafy.pizzashift2024.main.MainRouter
 import com.streafy.pizzashift2024.navigation.featurerouter.AuthRouterImpl
 import com.streafy.pizzashift2024.navigation.featurerouter.MainRouterImpl
 import com.streafy.pizzashift2024.navigation.featurerouter.OrdersRouterImpl
+import com.streafy.pizzashift2024.navigation.featurerouter.PizzaListRouterImpl
 import com.streafy.pizzashift2024.orders.navigation.OrdersRouter
+import com.streafy.pizzashift2024.pizzalist.navigation.PizzaListRouter
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -44,4 +46,7 @@ abstract class NavigationModule {
 
     @Binds
     abstract fun bindOrdersRouter(ordersRouterImpl: OrdersRouterImpl): OrdersRouter
+
+    @Binds
+    abstract fun pizzaListRouter(pizzaListRouterImpl: PizzaListRouterImpl): PizzaListRouter
 }
