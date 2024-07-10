@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.streafy.pizzashift2024.R
 import com.streafy.pizzashift2024.databinding.ItemPizzaBinding
-import com.streafy.pizzashift2024.pizzalist.domain.Pizza
 import com.streafy.pizzashift2024.shared.context
+import com.streafy.pizzashift2024.shared.pizza.domain.Pizza
 
 class PizzaAdapter(
     private val onClick: (Pizza) -> Unit
@@ -30,7 +30,7 @@ class PizzaAdapter(
                 }
                 tvName.text = pizza.name
                 tvDescription.text = pizza.description
-                tvPrice.text = context.getString(R.string.price, pizza.price)
+                tvPrice.text = context.getString(R.string.price_from, pizza.sizes.first().price)
             }
             itemView.setOnClickListener {
                 onClick(pizza)
