@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.streafy.pizzashift2024.R
 import com.streafy.pizzashift2024.databinding.FragmentAuthBinding
-import com.streafy.pizzashift2024.shared.textValue
+import com.streafy.pizzashift2024.shared.disable
+import com.streafy.pizzashift2024.shared.enable
+import com.streafy.pizzashift2024.shared.gone
+import com.streafy.pizzashift2024.shared.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -50,15 +54,15 @@ class AuthFragment : Fragment() {
     }
 
     private fun setupOnClickListeners() {
-        with (binding) {
+        with(binding) {
             btnContinue.setOnClickListener {
-                viewModel.requestOtpCode(etPhone.textValue)
+                viewModel.requestOtpCode()
             }
             btnLogin.setOnClickListener {
-                viewModel.signIn(etPhone.textValue, etCode.textValue.toInt())
+                viewModel.signIn()
             }
             btnRequestCodeAgain.setOnClickListener {
-                viewModel.requestOtpCode(etPhone.textValue)
+                viewModel.requestOtpCode()
             }
             ivCloseButton.setOnClickListener {
                 viewModel.onCloseButtonClick()
@@ -66,85 +70,116 @@ class AuthFragment : Fragment() {
             ivBackButton.setOnClickListener {
                 viewModel.onBackButtonClick()
             }
-        }
-    }
-
-    private fun handleState(state: AuthUiState) {
-        when (state) {
-            AuthUiState.Initial -> showInitial()
-            AuthUiState.Loading -> showLoading()
-            is AuthUiState.Error -> showError(state.message)
-            is AuthUiState.RequestedCode -> showRequestedCode(state.timeout)
-        }
-    }
-
-    private fun showInitial() {
-        with(binding) {
-            cpiLoading.visibility = View.GONE
-            tvError.visibility = View.GONE
-            btnContinue.isEnabled = true
-
-            etPhone.isEnabled = true
-            tilCode.visibility = View.GONE
-
-            btnContinue.visibility = View.VISIBLE
-            btnLogin.visibility = View.GONE
-
-            ivCloseButton.visibility = View.VISIBLE
-            ivBackButton.visibility = View.GONE
-
-            tvCodeHint.visibility = View.GONE
-            btnRequestCodeAgain.visibility = View.GONE
-        }
-    }
-
-    private fun showLoading() {
-        with(binding) {
-            cpiLoading.visibility = View.VISIBLE
-            btnRequestCodeAgain.visibility = View.GONE
-            tvCodeHint.visibility = View.GONE
-            tvError.visibility = View.GONE
-
-            btnContinue.isEnabled = false
-            btnLogin.isEnabled = false
-        }
-    }
-
-    private fun showError(message: String?) {
-        with(binding) {
-            cpiLoading.visibility = View.GONE
-            tvError.visibility = View.VISIBLE
-            tvError.text = message ?: getString(R.string.unknown_error)
-
-            btnContinue.isEnabled = true
-            btnLogin.isEnabled = true
-        }
-    }
-
-    private fun showRequestedCode(timeout: Int) {
-        with(binding) {
-            cpiLoading.visibility = View.GONE
-            tvError.visibility = View.GONE
-            btnLogin.isEnabled = true
-
-            etPhone.isEnabled = false
-            tilCode.visibility = View.VISIBLE
-
-            btnContinue.visibility = View.GONE
-            btnLogin.visibility = View.VISIBLE
-
-            ivCloseButton.visibility = View.GONE
-            ivBackButton.visibility = View.VISIBLE
-
-            if (timeout > 0) {
-                btnRequestCodeAgain.visibility = View.GONE
-                tvCodeHint.visibility = View.VISIBLE
-                tvCodeHint.text = getString(R.string.code_hint, timeout)
-            } else {
-                btnRequestCodeAgain.visibility = View.VISIBLE
-                tvCodeHint.visibility = View.GONE
+            etPhone.doOnTextChanged { text, _, _, _ ->
+                viewModel.onPhoneChanged(text.toString())
+            }
+            etCode.doOnTextChanged { text, _, _, _ ->
+                viewModel.onCodeChanged(text.toString())
             }
         }
     }
 
+    private fun handleState(state: AuthUiState) {
+        with(binding) {
+            showContent(state.phone, state.code, state.timeout)
+            if (state.isLoading) {
+                showLoading()
+            }
+            if (state.isError) {
+                val requestedCode = state.timeout != null
+                showError(state.errorMessage, requestedCode)
+            }
+        }
+    }
+
+    private fun FragmentAuthBinding.showLoading() {
+        cpiLoading.visible()
+
+        etPhone.disable()
+        etCode.disable()
+        btnContinue.disable()
+        btnLogin.disable()
+        btnRequestCodeAgain.disable()
+    }
+
+    private fun FragmentAuthBinding.showError(message: String?, requestedCode: Boolean) {
+        Snackbar.make(
+            binding.root,
+            message ?: getString(R.string.unknown_error),
+            Snackbar.LENGTH_SHORT
+        ).show()
+        viewModel.dismissError()
+        toggleInputsEnabledState(requestedCode)
+    }
+
+    private fun FragmentAuthBinding.showContent(phone: String, code: String?, timeout: Int?) {
+        cpiLoading.gone()
+
+        if (timeout == null) {
+            handleInitial(phone)
+        } else {
+            handleRequestedCode(phone, code ?: "", timeout)
+        }
+    }
+
+    private fun FragmentAuthBinding.handleInitial(phone: String) {
+        toggleInputsEnabledState(requestedCode = false)
+
+        ivCloseButton.visible()
+        ivBackButton.gone()
+        tilPhone.visible()
+        tilCode.gone()
+        btnContinue.visible()
+        btnLogin.gone()
+        btnRequestCodeAgain.gone()
+        tvCodeHint.gone()
+
+        etPhone.setText(phone)
+        etPhone.setSelection(phone.length)
+    }
+
+    private fun FragmentAuthBinding.handleRequestedCode(phone: String, code: String, timeout: Int) {
+        toggleInputsEnabledState(requestedCode = true)
+
+        ivCloseButton.gone()
+        ivBackButton.visible()
+        tilPhone.visible()
+        tilCode.visible()
+        btnContinue.gone()
+        btnLogin.visible()
+
+        etPhone.setText(phone)
+        etPhone.setSelection(phone.length)
+        etCode.setText(code)
+        etCode.setSelection(code.length)
+
+        handleTimeout(timeout)
+    }
+
+    private fun FragmentAuthBinding.toggleInputsEnabledState(requestedCode: Boolean) {
+        if (requestedCode) {
+            etPhone.disable()
+            etCode.enable()
+            btnContinue.disable()
+            btnLogin.enable()
+            btnRequestCodeAgain.enable()
+        } else {
+            etPhone.enable()
+            etCode.disable()
+            btnContinue.enable()
+            btnLogin.disable()
+            btnRequestCodeAgain.disable()
+        }
+    }
+
+    private fun FragmentAuthBinding.handleTimeout(timeout: Int) {
+        if (timeout > 0) {
+            btnRequestCodeAgain.gone()
+            tvCodeHint.visible()
+            tvCodeHint.text = getString(R.string.code_hint, timeout)
+        } else {
+            btnRequestCodeAgain.visible()
+            tvCodeHint.gone()
+        }
+    }
 }
