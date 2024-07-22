@@ -1,7 +1,5 @@
 package com.streafy.pizzashift2024.auth.presentation
 
-import android.os.CountDownTimer
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.streafy.pizzashift2024.auth.domain.RequestOtpCodeUseCase
@@ -9,8 +7,11 @@ import com.streafy.pizzashift2024.auth.domain.SignInUseCase
 import com.streafy.pizzashift2024.auth.navigation.AuthRouter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,81 +22,114 @@ class AuthViewModel @Inject constructor(
     private val router: AuthRouter
 ) : ViewModel() {
 
-    private var _state = MutableStateFlow<AuthUiState>(AuthUiState.Initial)
+    private var _state = MutableStateFlow(
+        AuthUiState(
+            phone = "",
+            code = null,
+            timeout = null,
+            isLoading = false,
+            isError = false,
+            errorMessage = null
+        )
+    )
     val state: StateFlow<AuthUiState> get() = _state
 
-    private var timer: CountDownTimer? = null
+    private var timerJob: Job? = null
 
-    fun requestOtpCode(phone: String) {
+    fun requestOtpCode() {
         viewModelScope.launch {
-            _state.value = AuthUiState.Loading
+            _state.update { it.copy(isLoading = true) }
             try {
-                val timeout = requestOtpCodeUseCase(phone)
-                _state.value = AuthUiState.RequestedCode(timeout)
+                val phone = state.value.phone
+                val timeout = requestOtpCodeUseCase(phone) / 1000
+                _state.update { it.copy(timeout = timeout, isLoading = false, isError = false) }
 
-                startTimer(timeout.toLong())
+                startTimer(durationSeconds = timeout)
             } catch (ce: CancellationException) {
                 throw ce
             } catch (e: Exception) {
-                _state.value = AuthUiState.Error(e.message)
+                onErrorOccurred(e.localizedMessage)
             }
         }
     }
 
-    fun signIn(phone: String, code: Int) {
+    fun signIn() {
         viewModelScope.launch {
-            _state.value = AuthUiState.Loading
+            _state.update { it.copy(isLoading = true) }
             try {
+                val phone = state.value.phone
+                val code = state.value.code?.toInt() ?: error("Incorrect code")
+
                 signInUseCase(phone, code)
                 router.goBack()
             } catch (ce: CancellationException) {
                 throw ce
             } catch (e: Exception) {
-                stopTimer()
-                _state.value = AuthUiState.Error(e.message)
+                onErrorOccurred(e.localizedMessage)
             }
         }
     }
 
     fun onCloseButtonClick() {
-        stopTimer()
+        timerJob?.cancel()
         router.goBack()
     }
 
     fun onBackButtonClick() {
-        stopTimer()
-        _state.value = AuthUiState.Initial
+        timerJob?.cancel()
+        _state.update {
+            it.copy(
+                code = null,
+                timeout = null
+            )
+        }
     }
 
-    private fun startTimer(durationMillis: Long) {
-        timer?.cancel()
-        timer = object : CountDownTimer(durationMillis, 1000) {
+    fun dismissError() {
+        _state.update {
+            it.copy(isLoading = false, isError = false, errorMessage = null)
+        }
+    }
 
-            override fun onTick(millisUntilFinished: Long) {
-                _state.value = AuthUiState.RequestedCode((millisUntilFinished / 1000).toInt())
+    fun onPhoneChanged(phone: String) {
+        _state.update {
+            it.copy(phone = phone)
+        }
+    }
+
+    fun onCodeChanged(code: String) {
+        _state.update {
+            it.copy(code = code)
+        }
+    }
+
+    private fun startTimer(durationSeconds: Int) {
+        timerJob = viewModelScope.launch {
+            for (secondsUntilFinished in durationSeconds downTo 0) {
+                onTimerTick(secondsUntilFinished)
+                delay(1000)
             }
-
-            override fun onFinish() {
-                _state.value = AuthUiState.RequestedCode(0)
-            }
-        }.start()
+        }
     }
 
-    private fun stopTimer() {
-        timer?.cancel()
-        timer = null
+    private fun onTimerTick(secondsUntilFinished: Int) {
+        _state.update {
+            it.copy(timeout = secondsUntilFinished)
+        }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        timer = null
+    private fun onErrorOccurred(message: String?) {
+        _state.update {
+            it.copy(isLoading = false, isError = true, errorMessage = message)
+        }
     }
 }
 
-sealed interface AuthUiState {
-
-    data object Initial : AuthUiState
-    data object Loading : AuthUiState
-    data class RequestedCode(val timeout: Int) : AuthUiState
-    data class Error(val message: String?) : AuthUiState
-}
+data class AuthUiState(
+    val phone: String,
+    val code: String?,
+    val timeout: Int?,
+    val isLoading: Boolean,
+    val isError: Boolean,
+    val errorMessage: String?
+)
