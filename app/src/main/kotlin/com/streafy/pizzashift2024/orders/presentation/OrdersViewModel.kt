@@ -3,8 +3,8 @@ package com.streafy.pizzashift2024.orders.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.streafy.pizzashift2024.orders.navigation.OrdersRouter
-import com.streafy.pizzashift2024.shared.tokenstorage.CheckIsAuthUseCase
-import com.streafy.pizzashift2024.shared.tokenstorage.ClearTokenUseCase
+import com.streafy.pizzashift2024.shared.token.domain.usecase.ClearTokenUseCase
+import com.streafy.pizzashift2024.shared.token.domain.usecase.IsTokenExistsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrdersViewModel @Inject constructor(
-    private val isAuthUseCase: CheckIsAuthUseCase,
+    private val isTokenExistsUseCase: IsTokenExistsUseCase,
     private val clearTokenUseCase: ClearTokenUseCase,
     private val router: OrdersRouter,
 ) : ViewModel() {
@@ -23,10 +23,10 @@ class OrdersViewModel @Inject constructor(
     private val _state = MutableStateFlow<OrdersUiState>(OrdersUiState.Initial)
     val state: StateFlow<OrdersUiState> get() = _state
 
-    fun checkAuth() {
+    fun checkAuthentication() {
         viewModelScope.launch {
             try {
-                val isAuthenticated = isAuthUseCase()
+                val isAuthenticated = isTokenExistsUseCase()
 
                 if (isAuthenticated) {
                     _state.value = OrdersUiState.Authenticated

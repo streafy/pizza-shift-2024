@@ -1,4 +1,4 @@
-package com.streafy.pizzashift2024.shared.tokenstorage
+package com.streafy.pizzashift2024.shared.token.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -7,6 +7,10 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.streafy.pizzashift2024.shared.token.data.TokenRepositoryImpl
+import com.streafy.pizzashift2024.shared.token.data.datasource.TokenLocalDataSource
+import com.streafy.pizzashift2024.shared.token.data.datasource.TokenLocalDataSourceImpl
+import com.streafy.pizzashift2024.shared.token.domain.TokenRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -20,7 +24,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class TokenStorageModule {
+abstract class TokenModule {
 
     companion object {
         private const val TOKEN_PREFERENCES_NAME = "token_preferences"
@@ -40,7 +44,12 @@ abstract class TokenStorageModule {
     }
 
     @Binds
-    abstract fun bindTokenStorage(
-        preferencesDataStoreTokenStorage: PreferencesDataStoreTokenStorage
-    ): TokenStorage
+    abstract fun bindTokenLocalDataSource(
+        tokenLocalDataSourceImpl: TokenLocalDataSourceImpl
+    ): TokenLocalDataSource
+
+    @Binds
+    abstract fun bindTokenRepository(
+        tokenRepositoryImpl: TokenRepositoryImpl
+    ): TokenRepository
 }
