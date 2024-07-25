@@ -38,7 +38,7 @@ class OrdersFragment : Fragment() {
         binding.btnClearToken.setOnClickListener {
             viewModel.clearToken()
         }
-        viewModel.checkAuth()
+        viewModel.checkAuthentication()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.state.collectLatest(::handleState)
         }

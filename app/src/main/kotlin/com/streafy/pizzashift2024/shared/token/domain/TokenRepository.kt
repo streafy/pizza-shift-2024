@@ -1,6 +1,6 @@
-package com.streafy.pizzashift2024.shared.tokenstorage
+package com.streafy.pizzashift2024.shared.token.domain
 
-interface TokenStorage {
+interface TokenRepository {
 
     suspend fun save(token: String)
 

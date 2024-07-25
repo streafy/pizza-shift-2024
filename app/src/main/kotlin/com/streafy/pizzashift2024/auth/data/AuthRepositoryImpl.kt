@@ -3,16 +3,14 @@ package com.streafy.pizzashift2024.auth.data
 import com.streafy.pizzashift2024.auth.data.model.otp.OtpModel
 import com.streafy.pizzashift2024.auth.data.model.signin.SignInModel
 import com.streafy.pizzashift2024.auth.domain.AuthRepository
-import com.streafy.pizzashift2024.shared.tokenstorage.TokenStorage
-import com.streafy.pizzashift2024.shared.network.AuthTokenInterceptor
+import com.streafy.pizzashift2024.shared.token.domain.TokenRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
-    private val authTokenInterceptor: AuthTokenInterceptor,
-    private val tokenStorage: TokenStorage
+    private val tokenRepository: TokenRepository
 ) : AuthRepository {
 
     override suspend fun requestOtpCode(phone: String) =
@@ -20,7 +18,6 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun signIn(phone: String, code: Int) {
         val signInResponse = api.signIn(SignInModel(phone, code))
-        authTokenInterceptor.addToken(signInResponse.token)
-        tokenStorage.save(signInResponse.token)
+        tokenRepository.save(signInResponse.token)
     }
 }

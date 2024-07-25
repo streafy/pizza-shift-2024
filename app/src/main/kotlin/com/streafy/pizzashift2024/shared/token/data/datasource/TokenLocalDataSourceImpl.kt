@@ -1,4 +1,4 @@
-package com.streafy.pizzashift2024.shared.tokenstorage
+package com.streafy.pizzashift2024.shared.token.data.datasource
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,9 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PreferencesDataStoreTokenStorage @Inject constructor(
+class TokenLocalDataSourceImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>
-) : TokenStorage {
+) : TokenLocalDataSource {
 
     private companion object {
         val TOKEN_KEY = stringPreferencesKey("token")
@@ -23,10 +23,8 @@ class PreferencesDataStoreTokenStorage @Inject constructor(
         }
     }
 
-    override suspend fun get(): String? {
-        val preferences = dataStore.data.first()
-        return preferences[TOKEN_KEY]
-    }
+    override suspend fun get(): String? =
+        dataStore.data.first()[TOKEN_KEY]
 
     override suspend fun clear() {
         dataStore.edit { preferences ->
